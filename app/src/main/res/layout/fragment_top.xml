@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="TopFragment" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_aaa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint='post("aaa",1)' />
+
+        <Button
+            android:id="@+id/btn_bbb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint='postStick("bbb",1)' />
+
+        <Button
+            android:id="@+id/btn_ccc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint='postStick("ccc",1)' />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_clear_bbb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint='清掉tag="bbb"的粘性消息' />
+
+    <Button
+        android:id="@+id/btn_clear_ccc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint='清掉tag="ccc"的粘性消息' />
+
+    <Button
+        android:id="@+id/btn_clear_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint='清掉全部的粘性消息' />
+
+</LinearLayout>
