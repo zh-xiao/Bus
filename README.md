@@ -1,6 +1,6 @@
 [![](https://jitpack.io/v/zh-xiao/Bus.svg)](https://jitpack.io/#zh-xiao/Bus)
 # Bus 
-核心源码只有一个不到两百行代码的超轻量Bus，支持发布和订阅普通事件和粘性事件。
+核心源码只有一个不到两百行代码的超轻量Bus，支持发布和订阅普通事件和粘性事件(普通事件的发布订阅和粘性事件的发送订阅是隔离的)。
 ### 添加步骤
 1.在项目的gradle中添加maven { url 'https://jitpack.io' }
 
