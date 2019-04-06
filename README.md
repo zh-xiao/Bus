@@ -36,15 +36,15 @@ public void onDestroy() {
 ```
 Bus订阅和发送(订阅需在注册之后,注销之前)
 ```
-//Bus订阅,响应在主线程,如果需要响应在子线程用subscribeOnSubThread替换subscribeOnMainThread
+//Bus订阅,onPost响应在主线程,如果需要响应在子线程用subscribeOnSubThread替换subscribeOnMainThread
 bus.subscribeOnMainThread("aaa", new Bus.OnPostListener<Integer>() {
     @Override
     public void onPost(Integer eventData) {
-        //do something(响应在主线程)
+        //do something
     }
 });
 
-//Bus粘性订阅,响应在主线程,如果需要响应在子线程用subscribeStickOnSubThread替换subscribeStickOnMainThread
+//Bus粘性订阅,onPost响应在主线程,如果需要响应在子线程用subscribeStickOnSubThread替换subscribeStickOnMainThread
 bus.subscribeStickOnMainThread("bbb", new Bus.OnPostListener<Integer>() {
     @Override
     public void onPost(Integer eventData) {
