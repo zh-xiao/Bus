@@ -2,7 +2,7 @@
 # Bus 
 源码不到三百行代码的超轻量Bus，支持发布和订阅普通事件和粘性事件(普通事件的发布订阅和粘性事件的发送订阅是隔离的)。
 ### 添加
-1.在项目的gradle中添加: **maven { url 'https://jitpack.io' }**
+1.在项目的gradle中添加 : **maven { url 'https://jitpack.io' }**
 
 	allprojects {
 		repositories {
@@ -10,7 +10,7 @@
 			maven { url 'https://jitpack.io' }
 		}
 	}
-2.在app的gradle中添加: **implementation 'com.github.zh-xiao:Bus:1.0.1'**
+2.在app的gradle中添加 : **implementation 'com.github.zh-xiao:Bus:1.0.1'**
 
 	dependencies {
 		...
