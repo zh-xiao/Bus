@@ -2,7 +2,7 @@
 # Bus 
 源码不到三百行代码的超轻量Bus，支持发布和订阅普通事件和粘性事件(普通事件的发布订阅和粘性事件的发送订阅是隔离的)。
 ### 添加
-1.在项目的gradle中添加maven { url 'https://jitpack.io' }
+1.在项目的gradle中添加: **maven { url 'https://jitpack.io' }**
 
 	allprojects {
 		repositories {
@@ -10,9 +10,10 @@
 			maven { url 'https://jitpack.io' }
 		}
 	}
-2.在app的gradle中添加implementation 'com.github.zh-xiao:Bus:1.0.1'
+2.在app的gradle中添加: **implementation 'com.github.zh-xiao:Bus:1.0.1'**
 
 	dependencies {
+		...
 	        implementation 'com.github.zh-xiao:Bus:1.0.1'
 	}
 ### 使用
@@ -30,6 +31,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
 @Override
 public void onDestroy() {
+    ...
     //Bus注销
     bus.unregister(this);
 }
@@ -45,7 +47,7 @@ bus.subscribeOnMainThread("aaa", new Bus.OnPostListener<Integer>() {
 });
 
 //Bus粘性订阅,onPost响应在主线程,如果需要响应在子线程用subscribeStickOnSubThread替换subscribeStickOnMainThread
-bus.subscribeStickOnMainThread("bbb", new Bus.OnPostListener<Integer>() {
+bus.subscribeStickOnMainThread("bbb", new Bus.OnPostListener<Integer>() {````
     @Override
     public void onPost(Integer eventData) {
         //do something
