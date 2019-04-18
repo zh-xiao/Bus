@@ -47,7 +47,7 @@ bus.subscribeOnMainThread("aaa", new Bus.OnPostListener<Integer>() {
 });
 
 //Bus粘性订阅,onPost响应在主线程,如果需要响应在子线程用subscribeStickOnSubThread替换subscribeStickOnMainThread
-bus.subscribeStickOnMainThread("bbb", new Bus.OnPostListener<Integer>() {````
+bus.subscribeStickOnMainThread("bbb", new Bus.OnPostListener<Integer>() {
     @Override
     public void onPost(Integer eventData) {
         //do something
