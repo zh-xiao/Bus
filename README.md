@@ -10,11 +10,11 @@
 			maven { url 'https://jitpack.io' }
 		}
 	}
-2.在app的gradle中添加 : **implementation 'com.github.zh-xiao:Bus:1.0.1'**
+2.在app的gradle中添加 : **implementation 'com.github.zh-xiao:Bus:1.0.2'**
 
 	dependencies {
 		...
-	        implementation 'com.github.zh-xiao:Bus:1.0.1'
+	        implementation 'com.github.zh-xiao:Bus:1.0.2'
 	}
 ### 使用
 Bus注册和注销
