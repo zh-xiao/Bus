@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.zhangxiao.bus.Bus;
 
@@ -18,12 +17,9 @@ public class BottomFragment extends Fragment implements View.OnClickListener {
     Button btn_subscribe_bbb;
     Button btn_subscribe_ccc;
 
-    Bus bus = new Bus();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        bus.regist(this);
         View view = inflater.inflate(R.layout.fragment_bottom, container, false);
         initView(view);
         return view;
@@ -41,14 +37,14 @@ public class BottomFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        bus.unRegist(this);
+        Bus.cancel(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_subscribe_aaa:
-                bus.subscribeOnMainThread("aaa", new Bus.OnPostListener<Integer>() {
+                Bus.subscribeOnMainThread(this,"aaa", new Bus.OnPostListener<Integer>() {
                     @Override
                     public void onPost(final Integer eventData) {
                         Log.d("Bus", "响应线程:"+Thread.currentThread().getName());
@@ -63,7 +59,7 @@ public class BottomFragment extends Fragment implements View.OnClickListener {
                 });
                 break;
             case R.id.btn_subscribe_bbb:
-                bus.subscribeStickOnMainThread("bbb", new Bus.OnPostListener<Integer>() {
+                Bus.subscribeStickOnMainThread(this,"bbb", new Bus.OnPostListener<Integer>() {
                     @Override
                     public void onPost(final Integer eventData) {
                         Log.d("Bus", "响应线程:"+Thread.currentThread().getName());
@@ -78,7 +74,7 @@ public class BottomFragment extends Fragment implements View.OnClickListener {
                 });
                 break;
             case R.id.btn_subscribe_ccc:
-                bus.subscribeStickOnSubThread("ccc", new Bus.OnPostListener<Integer>() {
+                Bus.subscribeStickOnSubThread(this,"ccc", new Bus.OnPostListener<Integer>() {
                     @Override
                     public void onPost(final Integer eventData) {
                         Log.d("Bus", "响应线程:"+Thread.currentThread().getName());

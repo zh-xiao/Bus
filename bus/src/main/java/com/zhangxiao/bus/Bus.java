@@ -23,7 +23,7 @@ public class Bus {
     /**
      * 标记事件回调在主线程还是子线程
      */
-    private enum Scheduler{
+    private enum Scheduler {
         mainThread,
         subThread
     }
@@ -45,20 +45,6 @@ public class Bus {
     private static Map<Object, Map<String, OnPostListenerWrap>> sStickOnPostListenerMap = new HashMap<>();
 
     /**
-     * 非粘性
-     * String-->eventName
-     * OnPostListener-->事件回调
-     */
-    private Map<String, OnPostListenerWrap> onPostListenersMap = new HashMap<>();
-
-    /**
-     * 粘性
-     * String-->eventName
-     * OnPostListener-->事件回调
-     */
-    private Map<String, OnPostListenerWrap> stickOnPostListenersMap = new HashMap<>();
-
-    /**
      * 粘性
      * String-->eventName
      * Object-->eventData
@@ -74,36 +60,45 @@ public class Bus {
 
     /**
      * OnPostListener的包装类,支持事件回调线程的标记
+     *
      * @param <T>
      */
-    public class OnPostListenerWrap<T>{
+    public static class OnPostListenerWrap<T> {
         OnPostListener<T> onPostListener;
         Scheduler scheduler;
 
-        public OnPostListenerWrap(OnPostListener<T> onPostListener,Scheduler scheduler){
-            this.onPostListener=onPostListener;
-            this.scheduler=scheduler;
+        public OnPostListenerWrap(OnPostListener<T> onPostListener, Scheduler scheduler) {
+            this.onPostListener = onPostListener;
+            this.scheduler = scheduler;
         }
     }
 
-    /**
-     * 注册
-     *
-     * @param subscriber
-     */
-    public void regist(Object subscriber) {
-        sOnPostListenerMap.put(subscriber, onPostListenersMap);
-        sStickOnPostListenerMap.put(subscriber, stickOnPostListenersMap);
+    private static Map<String, OnPostListenerWrap> getOnPostListenerWrapMap(Object tag) {
+        Map<String, OnPostListenerWrap> onPostListenerWrapMap = sOnPostListenerMap.get(tag);
+        if (onPostListenerWrapMap == null) {
+            onPostListenerWrapMap = new HashMap<>();
+            sOnPostListenerMap.put(tag, onPostListenerWrapMap);
+        }
+        return onPostListenerWrapMap;
+    }
+
+    private static Map<String, OnPostListenerWrap> getStickOnPostListenerWrapMap(Object tag) {
+        Map<String, OnPostListenerWrap> onPostListenerWrapMap = sStickOnPostListenerMap.get(tag);
+        if (onPostListenerWrapMap == null) {
+            onPostListenerWrapMap = new HashMap<>();
+            sStickOnPostListenerMap.put(tag, onPostListenerWrapMap);
+        }
+        return onPostListenerWrapMap;
     }
 
     /**
-     * 取消注册
+     * 取消此tag下的所有订阅
      *
-     * @param subscriber
+     * @param tag
      */
-    public static void unRegist(Object subscriber) {
-        sOnPostListenerMap.remove(subscriber);
-        sStickOnPostListenerMap.remove(subscriber);
+    public static void cancel(Object tag) {
+        sOnPostListenerMap.remove(tag);
+        sStickOnPostListenerMap.remove(tag);
     }
 
     /**
@@ -116,16 +111,7 @@ public class Bus {
         if (eventName == null || eventData == null) {
             return;
         }
-        if (Looper.getMainLooper() == Looper.myLooper()) {
-            post(eventName,eventData,sOnPostListenerMap);
-        } else {
-            sHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    post(eventName,eventData,sOnPostListenerMap);
-                }
-            });
-        }
+        post(eventName, eventData, sOnPostListenerMap);
     }
 
     /**
@@ -138,29 +124,22 @@ public class Bus {
         if (eventName == null || eventData == null) {
             return;
         }
-        if (Looper.getMainLooper() == Looper.myLooper()) {
-            post(eventName,eventData,sStickOnPostListenerMap);
-        } else {
-            sHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    post(eventName,eventData,sStickOnPostListenerMap);
-                }
-            });
-        }
+        post(eventName, eventData, sStickOnPostListenerMap);
         sLastStickEventMap.put(eventName, eventData);
     }
 
     /**
      * 判断是否主线程
+     *
      * @return
      */
-    private static boolean isMainThread(){
-        return Looper.myLooper()==Looper.getMainLooper();
+    private static boolean isMainThread() {
+        return Looper.myLooper() == Looper.getMainLooper();
     }
 
     /**
      * 发布事件
+     *
      * @param eventName
      * @param eventData
      * @param onPostListenerMap
@@ -170,7 +149,7 @@ public class Bus {
             final OnPostListenerWrap onPostListenerWrap = objectMapEntry.getValue().get(eventName);
             if (onPostListenerWrap != null) {
                 /*******************当前线程和期望线程不一致begin*****************/
-                if (onPostListenerWrap.scheduler==Scheduler.subThread&&isMainThread()){
+                if (onPostListenerWrap.scheduler == Scheduler.subThread && isMainThread()) {
                     sExecutor.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -179,7 +158,7 @@ public class Bus {
                     });
                     return;
                 }
-                if (onPostListenerWrap.scheduler==Scheduler.mainThread&&!isMainThread()){
+                if (onPostListenerWrap.scheduler == Scheduler.mainThread && !isMainThread()) {
                     sHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -196,41 +175,45 @@ public class Bus {
 
     /**
      * 订阅事件,事件回调在主线程
+     *
      * @param eventName
      * @param listener
      * @param <T>
      */
-    public <T> void subscribeOnMainThread(String eventName, OnPostListener<T> listener) {
-        onPostListenersMap.put(eventName, new OnPostListenerWrap(listener,Scheduler.mainThread));
+    public static <T> void subscribeOnMainThread(Object tag, String eventName, OnPostListener<T> listener) {
+        getOnPostListenerWrapMap(tag).put(eventName, new OnPostListenerWrap(listener, Scheduler.mainThread));
     }
 
     /**
      * 订阅事件,事件回调在子线程
+     *
      * @param eventName
      * @param listener
      * @param <T>
      */
-    public <T> void subscribeOnSubThread(String eventName, OnPostListener<T> listener) {
-        onPostListenersMap.put(eventName, new OnPostListenerWrap(listener,Scheduler.subThread));
+    public static <T> void subscribeOnSubThread(Object tag, String eventName, OnPostListener<T> listener) {
+        getOnPostListenerWrapMap(tag).put(eventName, new OnPostListenerWrap(listener, Scheduler.subThread));
     }
 
     /**
      * 订阅粘性事件,事件回调在主线程
+     *
      * @param eventName
      * @param listener
      */
-    public void subscribeStickOnMainThread(String eventName, OnPostListener listener) {
-        stickOnPostListenersMap.put(eventName, new OnPostListenerWrap(listener,Scheduler.mainThread));
+    public static void subscribeStickOnMainThread(Object tag, String eventName, OnPostListener listener) {
+        getStickOnPostListenerWrapMap(tag).put(eventName, new OnPostListenerWrap(listener, Scheduler.mainThread));
         postStick(eventName, sLastStickEventMap.get(eventName));
     }
 
     /**
      * 订阅粘性事件,事件回调在子线程
+     *
      * @param eventName
      * @param listener
      */
-    public void subscribeStickOnSubThread(String eventName, OnPostListener listener) {
-        stickOnPostListenersMap.put(eventName, new OnPostListenerWrap(listener,Scheduler.subThread));
+    public static void subscribeStickOnSubThread(Object tag, String eventName, OnPostListener listener) {
+        getStickOnPostListenerWrapMap(tag).put(eventName, new OnPostListenerWrap(listener, Scheduler.subThread));
         postStick(eventName, sLastStickEventMap.get(eventName));
     }
 
