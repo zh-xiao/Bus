@@ -44,45 +44,33 @@ public class BottomFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_subscribe_aaa:
-                Bus.onMainThread(this,"aaa", new Bus.OnPostListener<Integer>() {
+                Bus.onMainThread(this, "aaa", new Bus.OnPostListener<Integer>() {
                     @Override
                     public void onPost(final Integer eventData) {
-                        Log.d("Bus", "响应线程:"+Thread.currentThread().getName());
-                        //切到主线程更新UI
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                btn_subscribe_aaa.setHint("接收到:"+eventData);
-                            }
-                        });
+                        Log.d("Bus", "响应线程:" + Thread.currentThread().getName());
+                        btn_subscribe_aaa.setHint("接收到:" + eventData);
                     }
                 });
                 break;
             case R.id.btn_subscribe_bbb:
-                Bus.onStickMainThread(this,"bbb", new Bus.OnPostListener<Integer>() {
+                Bus.onStickMainThread(this, "bbb", new Bus.OnPostListener<Integer>() {
                     @Override
                     public void onPost(final Integer eventData) {
-                        Log.d("Bus", "响应线程:"+Thread.currentThread().getName());
-                        //切到主线程更新UI
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                btn_subscribe_bbb.setHint("接收到:"+eventData);
-                            }
-                        });
+                        Log.d("Bus", "响应线程:" + Thread.currentThread().getName());
+                        btn_subscribe_bbb.setHint("接收到:" + eventData);
                     }
                 });
                 break;
             case R.id.btn_subscribe_ccc:
-                Bus.onStickSubThread(this,"ccc", new Bus.OnPostListener<Integer>() {
+                Bus.onStickSubThread(this, "ccc", new Bus.OnPostListener<Integer>() {
                     @Override
                     public void onPost(final Integer eventData) {
-                        Log.d("Bus", "响应线程:"+Thread.currentThread().getName());
+                        Log.d("Bus", "响应线程:" + Thread.currentThread().getName());
                         //切到主线程更新UI
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                btn_subscribe_ccc.setHint("接收到:"+eventData);
+                                btn_subscribe_ccc.setHint("接收到:" + eventData);
                             }
                         });
                     }
