@@ -1,24 +1,11 @@
 package com.zhangxiao.bus;
 
-import android.os.Handler;
 import android.os.Looper;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class Bus {
-
-    /**
-     * 用于切换子线程
-     */
-    private static Executor sExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-    /**
-     * 用于切换主线程
-     */
-    private static Handler sHandler = new Handler(Looper.getMainLooper());
 
     /**
      * 标记事件回调在主线程还是子线程
@@ -99,6 +86,7 @@ public class Bus {
     public static void cancel(Object tag) {
         sOnPostListenerMap.remove(tag);
         sStickOnPostListenerMap.remove(tag);
+        ThreadPool.cancel(tag);
     }
 
     /**
@@ -146,11 +134,12 @@ public class Bus {
      */
     private static void post(final String eventName, final Object eventData, Map<Object, Map<String, OnPostListenerWrap>> onPostListenerMap) {
         for (Map.Entry<Object, Map<String, OnPostListenerWrap>> objectMapEntry : onPostListenerMap.entrySet()) {
+            Object tag = objectMapEntry.getKey();
             final OnPostListenerWrap onPostListenerWrap = objectMapEntry.getValue().get(eventName);
             if (onPostListenerWrap != null) {
                 /*******************当前线程和期望线程不一致begin*****************/
                 if (onPostListenerWrap.scheduler == Scheduler.subThread && isMainThread()) {
-                    sExecutor.execute(new Runnable() {
+                    ThreadPool.runOnSubThread(tag, new Runnable() {
                         @Override
                         public void run() {
                             onPostListenerWrap.onPostListener.onPost(eventData);
@@ -159,7 +148,7 @@ public class Bus {
                     return;
                 }
                 if (onPostListenerWrap.scheduler == Scheduler.mainThread && !isMainThread()) {
-                    sHandler.post(new Runnable() {
+                    ThreadPool.runOnUiThread(tag, new Runnable() {
                         @Override
                         public void run() {
                             onPostListenerWrap.onPostListener.onPost(eventData);
