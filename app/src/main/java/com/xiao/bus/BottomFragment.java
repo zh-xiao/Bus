@@ -44,7 +44,7 @@ public class BottomFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_subscribe_aaa:
-                Bus.subscribeOnMainThread(this,"aaa", new Bus.OnPostListener<Integer>() {
+                Bus.onMainThread(this,"aaa", new Bus.OnPostListener<Integer>() {
                     @Override
                     public void onPost(final Integer eventData) {
                         Log.d("Bus", "响应线程:"+Thread.currentThread().getName());
@@ -59,7 +59,7 @@ public class BottomFragment extends Fragment implements View.OnClickListener {
                 });
                 break;
             case R.id.btn_subscribe_bbb:
-                Bus.subscribeStickOnMainThread(this,"bbb", new Bus.OnPostListener<Integer>() {
+                Bus.onStickMainThread(this,"bbb", new Bus.OnPostListener<Integer>() {
                     @Override
                     public void onPost(final Integer eventData) {
                         Log.d("Bus", "响应线程:"+Thread.currentThread().getName());
@@ -74,7 +74,7 @@ public class BottomFragment extends Fragment implements View.OnClickListener {
                 });
                 break;
             case R.id.btn_subscribe_ccc:
-                Bus.subscribeStickOnSubThread(this,"ccc", new Bus.OnPostListener<Integer>() {
+                Bus.onStickSubThread(this,"ccc", new Bus.OnPostListener<Integer>() {
                     @Override
                     public void onPost(final Integer eventData) {
                         Log.d("Bus", "响应线程:"+Thread.currentThread().getName());

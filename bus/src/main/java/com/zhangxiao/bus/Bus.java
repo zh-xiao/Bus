@@ -169,7 +169,7 @@ public class Bus {
      * @param listener
      * @param <T>
      */
-    public static <T> void subscribeOnMainThread(Object tag, String eventName, OnPostListener<T> listener) {
+    public static <T> void onMainThread(Object tag, String eventName, OnPostListener<T> listener) {
         getOnPostListenerWrapMap(tag).put(eventName, new OnPostListenerWrap(listener, Scheduler.mainThread));
     }
 
@@ -180,7 +180,7 @@ public class Bus {
      * @param listener
      * @param <T>
      */
-    public static <T> void subscribeOnSubThread(Object tag, String eventName, OnPostListener<T> listener) {
+    public static <T> void onSubThread(Object tag, String eventName, OnPostListener<T> listener) {
         getOnPostListenerWrapMap(tag).put(eventName, new OnPostListenerWrap(listener, Scheduler.subThread));
     }
 
@@ -190,7 +190,7 @@ public class Bus {
      * @param eventName
      * @param listener
      */
-    public static void subscribeStickOnMainThread(Object tag, String eventName, OnPostListener listener) {
+    public static void onStickMainThread(Object tag, String eventName, OnPostListener listener) {
         getStickOnPostListenerWrapMap(tag).put(eventName, new OnPostListenerWrap(listener, Scheduler.mainThread));
         postStick(eventName, sLastStickEventMap.get(eventName));
     }
@@ -201,7 +201,7 @@ public class Bus {
      * @param eventName
      * @param listener
      */
-    public static void subscribeStickOnSubThread(Object tag, String eventName, OnPostListener listener) {
+    public static void onStickSubThread(Object tag, String eventName, OnPostListener listener) {
         getStickOnPostListenerWrapMap(tag).put(eventName, new OnPostListenerWrap(listener, Scheduler.subThread));
         postStick(eventName, sLastStickEventMap.get(eventName));
     }
