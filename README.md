@@ -19,16 +19,16 @@
 ### 使用
 Bus订阅发送和注销
 ```
-//Bus订阅,onPost响应在主线程,如果需要响应在子线程用subscribeOnSubThread替换subscribeOnMainThread
-Bus.subscribeOnMainThread(this,"aaa", new Bus.OnPostListener<Integer>() {
+//Bus订阅,onPost响应在主线程,如果需要响应在子线程用onSubThread替换onMainThread
+Bus.onMainThread(this,"aaa", new Bus.OnPostListener<Integer>() {
     @Override
     public void onPost(Integer eventData) {
         //do something
     }
 });
 
-//Bus粘性订阅,onPost响应在主线程,如果需要响应在子线程用subscribeStickOnSubThread替换subscribeStickOnMainThread
-Bus.subscribeStickOnMainThread(this,"bbb", new Bus.OnPostListener<Integer>() {
+//Bus粘性订阅,onPost响应在主线程,如果需要响应在子线程用onStickSubThread替换onStickMainThread
+Bus.onStickMainThread(this,"bbb", new Bus.OnPostListener<Integer>() {
     @Override
     public void onPost(Integer eventData) {
         //do something
